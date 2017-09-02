@@ -3,8 +3,8 @@ Scraping Wawa data from the company's store locator page.
 
 ## Background
 As any born-and-raised Delaware Valley citizen knows, Wawa (particularly
-its coffee) is the life and blood of the region. To misquote a certain 4chan
-meme: Wawa is love, Wawa is life.
+its coffee) is the life and blood of the region. To misquote [a certain 4chan
+meme](http://knowyourmeme.com/memes/shrek-is-love-shrek-is-life): Wawa is love, Wawa is life.
 
 ### Previous attempts
 As a computer programmer who works with GIS (Geographic Information Systems),
