@@ -74,5 +74,7 @@ The code takes FOREVER to run! This is for two main reasons:
 - An internet connection
 
 #### Command line example
-$user:&nbsp;&nbsp;&nbsp;python&nbsp;&nbsp;&nbsp;wawaScraper.py&nbsp;&nbsp;&nbsp;schema.wawaTable
+```Shell
+USER:  python   wawaScraper.py  schema.wawaTable
+```
 
