@@ -75,7 +75,8 @@ def create_grid(bounding_box):
 ### Results
 The result of all of this was a surprisingly detailed table containing specific
 information such as manager names, store hours, and even individual gasoline type
-prices as of the last update. [I have exported this to csv](https://github.com/cfh294/WawaGeoScraper/blob/master/Tabular%20Data/wawaLocations_2017.csv).
+prices as of the last update. [I have exported this to csv](https://github.com/cfh294/WawaGeoScraper/blob/master/Tabular%20Data/wawaLocations_2017.csv) and have 
+made the data available [as a shapefile](https://github.com/cfh294/WawaGeoScraper/tree/master/Shapefile) as well. 
 
 ### Aside
 The code takes FOREVER to run! This is for two main reasons:
