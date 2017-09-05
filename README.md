@@ -47,6 +47,31 @@ by a Python list object (or array). I shoved these new rows into a database tabl
 using Python and SQL, and then used PostGIS functions to calculate the actual
 geometry of each Wawa store's location.
 
+Code sample showing how the grids are created: 
+```python
+def create_grid(bounding_box):
+	"""
+	Creates a grid of equally spaced coordinate pairs in a provided bounding box
+	:param bounding_box: A pair of points that represent the upper left and lower right coordinates of a bounding box
+	:return: A list of points: [(x1, y1), (x2, y2),..., (xn, yn)]
+	"""
+
+	lowerLeft, upperRight = bounding_box[0], bounding_box[1]
+	maxX, maxY, minX, minY = upperRight[0], upperRight[1], lowerLeft[0], lowerLeft[1]
+	points = []
+	currentX, currentY = minX, minY
+
+	while currentY < maxY:
+		while currentX < maxX:
+			points.append((currentX, currentY))
+			currentX += LAT_INCREMENTS
+		currentY += LAT_INCREMENTS
+		currentX = minX
+
+	return points
+```
+
+
 ### Results
 The result of all of this was a surprisingly detailed table containing specific
 information such as manager names, store hours, and even individual gasoline type
