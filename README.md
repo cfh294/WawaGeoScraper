@@ -29,7 +29,7 @@ I couldn't get into the JavaScript that backed their map, so it looked like
 I was stuck. I opened my inspector tools in Chrome and navigated to the
 XMLHttpRequest tab and found that each time I clicked the search button with
 a zip code entered, an http request was being fired that took
-the calculate coordinates of my entered zip code (I assume they use the center
+the calculated coordinates of my entered zip code (I assume they use the center
 of the zip code's polygon) as arguments. This request returns a giant ugly
 block of JSON containing Wawa data. After some messing around, I found that
 the JSON was most likely returning all the Wawas within five miles of the
