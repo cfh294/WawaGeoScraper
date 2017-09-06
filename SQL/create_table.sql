@@ -1,4 +1,4 @@
---This sample code is one of the statements that the Python script generates. 
+--This sample code is one of the statements that the Python script generates.
 CREATE TABLE wawa_locations
 (
   locationid integer NOT NULL,
