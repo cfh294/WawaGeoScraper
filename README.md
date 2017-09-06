@@ -126,6 +126,8 @@ The code takes FOREVER to run! This is for two main reasons:
    real-life earth would look like a bloated, round trapezoid since the lines of longitude get closer
    together as they approach the poles.
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/distortion.png)
+
 #### Requirements
 - Knowledge of how to use the command line to run a python script
 - The PostGIS extension for PostgreSQL
