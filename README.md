@@ -6,6 +6,9 @@ As any born-and-raised Delaware Valley citizen knows, Wawa (particularly
 its coffee) is the life and blood of the region. To misquote [a certain 4chan
 meme](http://knowyourmeme.com/memes/shrek-is-love-shrek-is-life): Wawa is love, Wawa is life.
 
+
+<img align="center" src="Images/wawa-front.jpg" alt="">
+
 ### Previous attempts
 As a computer programmer who works with GIS (Geographic Information Systems),
 I've always wanted a good dataset containing Wawa locations. Previously,
