@@ -1,5 +1,9 @@
 # WawaGeoScraper
-Scraping Wawa data from the company's store locator page. 
+Scraping Wawa data from the company's store locator page.
+
+If you don't feel like reading and just want the data, just click
+[this link](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1) to download
+the shapefile and csv.
 
 ## Background
 As any born-and-raised Delaware Valley citizen knows, Wawa (particularly
