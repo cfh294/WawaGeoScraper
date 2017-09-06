@@ -29,7 +29,7 @@ I couldn't get into the JavaScript that backed their map, so it looked like
 I was stuck. I opened my inspector tools in Chrome and navigated to the
 XMLHttpRequest tab and found that each time I clicked the search button with
 a zip code entered, an http request was being fired that took
-the calculate coordinates of my entered zip code (I assume they use the center
+the calculated coordinates of my entered zip code (I assume they use the center
 of the zip code's polygon) as arguments. This request returns a giant ugly
 block of JSON containing Wawa data. After some messing around, I found that
 the JSON was most likely returning all the Wawas within five miles of the
@@ -47,10 +47,36 @@ by a Python list object (or array). I shoved these new rows into a database tabl
 using Python and SQL, and then used PostGIS functions to calculate the actual
 geometry of each Wawa store's location.
 
+Code sample showing how the grids are created: 
+```python
+def create_grid(bounding_box):
+	"""
+	Creates a grid of equally spaced coordinate pairs in a provided bounding box
+	:param bounding_box: A pair of points that represent the upper left and lower right coordinates of a bounding box
+	:return: A list of points: [(x1, y1), (x2, y2),..., (xn, yn)]
+	"""
+
+	lowerLeft, upperRight = bounding_box[0], bounding_box[1]
+	maxX, maxY, minX, minY = upperRight[0], upperRight[1], lowerLeft[0], lowerLeft[1]
+	points = []
+	currentX, currentY = minX, minY
+
+	while currentY < maxY:
+		while currentX < maxX:
+			points.append((currentX, currentY))
+			currentX += LAT_INCREMENTS
+		currentY += LAT_INCREMENTS
+		currentX = minX
+
+	return points
+```
+
+
 ### Results
 The result of all of this was a surprisingly detailed table containing specific
 information such as manager names, store hours, and even individual gasoline type
-prices as of the last update. [I have exported this to csv](https://github.com/cfh294/WawaGeoScraper/blob/master/Tabular%20Data/wawaLocations_2017.csv).
+prices as of the last update. [I have exported this to csv](https://github.com/cfh294/WawaGeoScraper/blob/master/Tabular%20Data/wawaLocations_2017.csv) and have 
+made the data available [as a shapefile](https://github.com/cfh294/WawaGeoScraper/tree/master/Shapefile) as well. 
 
 ### Aside
 The code takes FOREVER to run! This is for two main reasons:
