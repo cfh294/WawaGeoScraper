@@ -136,6 +136,6 @@ The code takes FOREVER to run! This is for two main reasons:
 
 #### Command line example
 ```Shell
-USER:  python   wawaScraper.py  schema.wawaTable
+USER:  python   wawaScraper.py   schema.wawaTable
 ```
 
