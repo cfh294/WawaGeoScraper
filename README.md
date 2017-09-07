@@ -128,7 +128,7 @@ The code takes FOREVER to run! This is for two main reasons:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/distortion.png)
 
-#### Requirements (if you're bored and don't want to just [download it here](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1).
+#### Requirements (if you're bored and don't want to just [download it here](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1)).
 - Knowledge of how to use the command line to run a python script
 - The PostGIS extension for PostgreSQL
 - The python library [psycopg2](https://pypi.python.org/pypi/psycopg2) ("pip install psycopg2")
