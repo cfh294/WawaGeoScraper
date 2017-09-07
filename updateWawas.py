@@ -11,21 +11,21 @@ from scraperUtils import HEADER, AMENITIES_TAG
 from scraperUtils import FUEL_PRICES_TAG, ORDERED_JSON_TAGS, FUEL_BOOLEAN_TAG, BOOLEAN_TAGS
 from scraperUtils import STORENUM_REQUEST_URL
 
+# Script-specific constants
 MIN_ARGS = 3
 MAX_ARGS = 4
-
 EXISTS_SQL = """
-				SELECT EXISTS (
-				    SELECT *
-				    FROM information_schema.tables
-				    WHERE
-				      table_schema = '{0}' AND
-				      table_name = '{1}'
-				);
-			 """
+             SELECT EXISTS (
+              SELECT *
+              FROM information_schema.tables
+              WHERE
+              table_schema = '{0}' AND
+              table_name = '{1}'
+             );"""
 
 if __name__ == "__main__":
 
+	# check that a valid number of arguments is entered
 	numArgs = len(sys.argv)
 	if not(MIN_ARGS <= numArgs <= MAX_ARGS):
 		print "Invalid number of arguments input by the user!"
@@ -33,6 +33,11 @@ if __name__ == "__main__":
 
 	connectionString, tableName = sys.argv[1], sys.argv[2]
 	locationIDField = sys.argv[3] if numArgs == MAX_ARGS else "locationid"
+
+	locationIDFieldType = type(locationIDField)
+	if locationIDFieldType is not str:
+		print "Invalid field type input!\nNeeded: 'str', Given: '{0}'".format(str(locationIDFieldType))
+		sys.exit(1)
 
 	# validate the format of the input PostgreSQL table name
 	if not validate_postgres_table(tableName):
@@ -63,6 +68,7 @@ if __name__ == "__main__":
 	cursor.execute("SELECT {0} FROM {1};".format(locationIDField, tableName))
 	storeNumbers = [int(row[0]) for row in cursor.fetchall()]
 
+	# iterate through the store numbers
 	bar = Bar("Stores", max=len(storeNumbers))
 	for storeNumber in storeNumbers:
 
@@ -82,7 +88,7 @@ if __name__ == "__main__":
 		# render the json and grab only the location data we need
 		storeJSON = json.load(response)
 
-		# this will be our new row in the database table, in the same order as the header list
+		# this will be our updated data for this location
 		updatedData = []
 
 		# boolean indicating whether or not this wawa sells gas
