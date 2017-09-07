@@ -29,7 +29,7 @@ from progress.bar import Bar
 
 # Import all our needed constants and functions
 from scraperUtils import validate_postgres_table, parse_fuel_info, parse_address_info, quotify, create_grid
-from scraperUtils import HEADER, FIELD_TYPES, MID_ATL_BOX, FL_BOX, REQUEST_URL, LOCATIONS_JSON_KEY, AMENITIES_TAG
+from scraperUtils import HEADER, FIELD_TYPES, MID_ATL_BOX, FL_BOX, LOC_REQUEST_URL, LOCATIONS_JSON_KEY, AMENITIES_TAG
 from scraperUtils import FUEL_PRICES_TAG, ORDERED_JSON_TAGS, FUEL_BOOLEAN_TAG, BOOLEAN_TAGS
 from scraperUtils import LONGITUDE_HEADER_INDEX, LATITUDE_HEADER_INDEX
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
 	# validate and retrieve input
 	if len(sys.argv) != NEEDED_NUM_ARGS:
-		print "Not enough arguments input by the user!"
+		print "Invalid number of arguments input by the user!"
 		sys.exit(1)
 	connectionStr, tableName = sys.argv[1], sys.argv[2]
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
 		# parse the url that grabs the json data and read it
 		goOn = False
-		testURL = REQUEST_URL.format(x=coordinatePair[0], y=coordinatePair[1], limit=50)
+		testURL = LOC_REQUEST_URL.format(x=coordinatePair[0], y=coordinatePair[1], limit=50)
 		response = None
 
 		# If an HTTPError 500 happens, repeat until it works (this rarely happens and this solution has worked so far)
@@ -150,7 +150,6 @@ if __name__ == "__main__":
 			# have resulted from overlapping search areas in our grid.
 			try:
 				cursor.execute(thisSQL)
-				connection.commit()
 			except psycopg2.IntegrityError:
 				connection.rollback()  # rollback bad transaction
 

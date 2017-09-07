@@ -22,7 +22,8 @@ JSON_LAT_INDEX, JSON_LONG_INDEX = 0, 1
 DB_TABLE_REGEX = r"[_a-zA-Z]+([_a-zA-Z]*\d*)*[.][_a-zA-Z]+([_a-zA-Z]*\d*)*"
 
 # The URL
-REQUEST_URL = "https://www.wawa.com/Handlers/LocationByLatLong.ashx?limit={limit}&lat={y}&long={x}"
+LOC_REQUEST_URL = "https://www.wawa.com/Handlers/LocationByLatLong.ashx?limit={limit}&lat={y}&long={x}"
+STORENUM_REQUEST_URL = "https://www.wawa.com/Handlers/LocationByStoreNumber.ashx?storeNumber={storeNum}"
 
 # various JSON tags and tag info that deserves special attention in the code
 INDIVIDUAL_FUEL_PRICES_TAG = "price"
@@ -70,6 +71,23 @@ def quotify(value):
 	:return: A stringified version of the value, surrounded by single quotes
 	"""
 	return "'" + str(value) + "'"
+
+
+# def validate_connection_string(input_cnxn):
+# 	"""
+# 	If the input connection string is valid, this returns a psycopg2 Connection object,
+# 	else it throws an exception.
+#
+# 	:param input_cnxn: A user-input connection string
+# 	:return: a psycopg2 Connection object
+# 	"""
+# 	from psycopg2 import connect, OperationalError
+#
+# 	try:
+# 		out_cnxn = connect(input_cnxn)
+# 		return out_cnxn
+# 	except OperationalError:
+# 		raise OperationalError
 
 
 def create_grid(bounding_box):
