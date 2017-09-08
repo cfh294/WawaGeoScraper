@@ -11,7 +11,7 @@ the shapefile and csv</b>
 
 ### Suggested Use:
 Download the shapefile, use QGIS or OGR to put it in PostgreSQL, then use the update script as needed.
-Only use wawaScraper.py if you need a Wawa location that opened after you downloaded the original data. 
+Only use wawaScraper.py if you need a Wawa location that opened after you downloaded the original data.
 
 ## Background
 As any born-and-raised Delaware Valley citizen knows, Wawa (particularly
@@ -144,6 +144,9 @@ The code takes FOREVER to run! This is for two main reasons:
 
 #### Command line example
 ```Shell
-USER:  python   wawaScraper.py   schema.wawaTable
+USER:  python   wawaScraper.py   connectionString    schema.wawaTable
 ```
-
+and
+```Shell
+USER: python    updateWawas.py   connectionString    schema.wawaTable
+```
