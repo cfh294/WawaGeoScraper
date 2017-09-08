@@ -6,8 +6,8 @@ Scraping Wawa data from the company's store locator page.
 the shapefile and csv</b>
 
 ## What do you get with this repository
-- wawaScraper.py: A script that does an initial download of the data. Instead of running this, you can just [download the result](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1).
-- updateWawas.py: A script that updates the existing table in your database to have new values like most recent gas prices.
+- [wawaScraper.py](https://github.com/cfh294/WawaGeoScraper/blob/master/wawaScraper.py): A script that does an initial download of the data. Instead of running this, you can just [download the result](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1).
+- [updateWawas.py](https://github.com/cfh294/WawaGeoScraper/blob/master/updateWawas.py): A script that updates the existing table in your database to have new values like most recent gas prices.
 
 ### Suggested Use:
 Download the shapefile, use QGIS or OGR to put it in PostgreSQL, then use the update script as needed.
