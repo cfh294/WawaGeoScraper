@@ -5,6 +5,14 @@ Scraping Wawa data from the company's store locator page.
 [this link](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1) to download
 the shapefile and csv</b>
 
+## What do you get with this repository
+- wawaScraper.py: A script that does an initial download of the data. Instead of running this, you can just [download the result](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1).
+- updateWawas.py: A script that updates the existing table in your database to have new values like most recent gas prices.
+
+### Suggested Use:
+Download the shapefile, use QGIS or OGR to put it in PostgreSQL, then use the update script as needed.
+Only use wawaScraper.py if you need a Wawa location that opened after you downloaded the original data. 
+
 ## Background
 As any born-and-raised Delaware Valley citizen knows, Wawa (particularly
 its coffee) is the life and blood of the region. To misquote [a certain 4chan

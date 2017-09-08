@@ -1,3 +1,16 @@
+#!/usr/bin/python
+"""
+updateWawas.py
+
+Script that updates Wawa info using HTTP Requests. User inputs a connection string and the name
+of the table that was originally downloaded with wawaScraper.py
+
+This is free, open source software.
+License: https://www.gnu.org/licenses/gpl-3.0.en.html
+
+Code by Connor Hornibrook (c) 2017
+"""
+
 # Import standard libraries
 import urllib2
 import json
@@ -46,6 +59,7 @@ if __name__ == "__main__":
 
 	# validate the connection string
 	connection = None
+
 	try:
 		connection = psycopg2.connect(connectionString)
 	except psycopg2.OperationalError:
@@ -70,6 +84,7 @@ if __name__ == "__main__":
 
 	# iterate through the store numbers
 	bar = Bar("Stores", max=len(storeNumbers))
+	fails = []
 	for storeNumber in storeNumbers:
 
 		# parse the url that grabs the json data and read it
@@ -78,77 +93,99 @@ if __name__ == "__main__":
 		response = None
 
 		# If an HTTPError 500 happens, repeat until it works (this rarely happens and this solution has worked so far)
+		tries = 0
+		gotData = False
 		while not goOn:
+			if tries < 20:
+				try:
+					response = urllib2.urlopen(testURL)
+					goOn = True
+					gotData = True
+				except urllib2.HTTPError as e:
+					if e.code == 404:
+						fails.append(str(storeNumber))
+						goOn = True
+					else:
+						tries += 1
+						pass
+
+		if gotData:
+
+			# render the json and grab only the location data we need
+			storeJSON = json.load(response)
+
+			# this will be our updated data for this location
+			updatedData = []
+
+			# boolean indicating whether or not this wawa sells gas
+			sellsGas = storeJSON[AMENITIES_TAG][FUEL_BOOLEAN_TAG]
+			sql = "UPDATE {0} SET\n".format(tableName)
+
+			for tag in ORDERED_JSON_TAGS:
+
+				# grab the value associated with this tag
+				rawData = storeJSON[tag]
+
+				# grab all the address data
+				if tag == "addresses":
+					addressInfo = parse_address_info(rawData)
+					locationInfo = [addressInfo[0], addressInfo[1], addressInfo[2], addressInfo[3],
+					                addressInfo[4][0], addressInfo[4][1]]
+					updatedData.extend(locationInfo)
+
+				# similarly, we have to treat gas prices as a special case as well, as the individual components are
+				# associated with the "fuelTypes" tag
+				elif tag == FUEL_PRICES_TAG:
+					if sellsGas:
+						updatedData.extend(parse_fuel_info(rawData))
+					else:
+						updatedData.extend(["'0'", "NULL", "NULL", "NULL"])
+
+				# Turn python type True into a '1' or '0' for entry in PostgreSQL. This step is probably not needed,
+				# but it is standard with my preferred SQL syntax style.
+				elif tag in BOOLEAN_TAGS:
+					if tag == "isActive":
+						updatedData.append("'1'")
+					else:
+						if rawData:
+							updatedData.append("'1'")
+						else:
+							updatedData.append("'0'")
+
+				# all other values can be taken as is, surrounded by single quotes
+				else:
+					if type(rawData) is str:
+						escapeApost = rawData.replace("'", "''")
+						updatedData.append(quotify(escapeApost))
+					else:
+						updatedData.append(quotify(rawData))
+
+			# update the database record
+			for index, field in enumerate(HEADER):
+				sql += "{0}={1},\n".format(field, updatedData[index])
+			sql = sql[:-2] + "\nWHERE {0}='{1}';".format(locationIDField, storeNumber)
+
 			try:
-				response = urllib2.urlopen(testURL)
-				goOn = True
-			except urllib2.HTTPError:
-				pass
-
-		# render the json and grab only the location data we need
-		storeJSON = json.load(response)
-
-		# this will be our updated data for this location
-		updatedData = []
-
-		# boolean indicating whether or not this wawa sells gas
-		sellsGas = storeJSON[AMENITIES_TAG][FUEL_BOOLEAN_TAG]
-		sql = "UPDATE {0} SET\n".format(tableName)
-
-		for tag in ORDERED_JSON_TAGS:
-
-			# grab the value associated with this tag
-			rawData = storeJSON[tag]
-
-			# grab all the address data
-			if tag == "addresses":
-				addressInfo = parse_address_info(rawData)
-				locationInfo = [addressInfo[0], addressInfo[1], addressInfo[2], addressInfo[3],
-				                addressInfo[4][0], addressInfo[4][1]]
-				updatedData.extend(locationInfo)
-
-			# similarly, we have to treat gas prices as a special case as well, as the individual components are
-			# associated with the "fuelTypes" tag
-			elif tag == FUEL_PRICES_TAG:
-				if sellsGas:
-					updatedData.extend(parse_fuel_info(rawData))
-				else:
-					updatedData.extend(["'0'", "NULL", "NULL", "NULL"])
-
-			# Turn python type True into a '1' or '0' for entry in PostgreSQL. This step is probably not needed,
-			# but it is standard with my preferred SQL syntax style.
-			elif tag in BOOLEAN_TAGS:
-				if rawData:
-					updatedData.append("'1'")
-				else:
-					updatedData.append("'0'")
-
-			# all other values can be taken as is, surrounded by single quotes
-			else:
-				if type(rawData) is str:
-					escapeApost = rawData.replace("'", "''")
-					updatedData.append(quotify(escapeApost))
-				else:
-					updatedData.append(quotify(rawData))
-
-		for index, field in enumerate(HEADER):
-			sql += "{0}={1},\n".format(field, updatedData[index])
-		sql = sql[:-2] + "\nWHERE {0}='{1}';".format(locationIDField, storeNumber)
-
-		try:
-			cursor.execute(sql)
-		except psycopg2.IntegrityError:
-			connection.rollback()  # rollback bad transaction
+				cursor.execute(sql)
+			except psycopg2.IntegrityError:
+				connection.rollback()  # rollback bad transaction
+			except psycopg2.ProgrammingError:
+				print
+				print "Error with SQL, make sure your fields are named as they were on initial download:"
+				print ", ".format(HEADER)
+				sys.exit(1)
 
 		bar.next()
-	connection.commit()
 
+	# set all the inactive Wawas' isActive fields to false
+	sql = "UPDATE {0} SET isActive='f' WHERE {1} IN ({2})".format(tableName, locationIDField, ", ".join(fails))
+	cursor.execute(sql)
+
+	# commit changes and release any possible locks
+	connection.commit()
 	connection.close()
 	del cursor, connection
+
+	print "\nFollowing store numbers no longer in Wawa's " \
+	      "system and have been set to inactive: {0}.".format(", ".join(fails))
 	print "Finished."
-
-
-
-
-
-

@@ -158,6 +158,9 @@ if __name__ == "__main__":
 	# end the progress bar
 	bar.finish()
 
+	# Wawa doesn't use this field, so we will. All of these are "active" store (as in, open). Set them all to true.
+	cursor.execute("UPDATE {0} SET isactive='t';".format(tableName))
+
 	# commit changes and release possible memory locks
 	connection.commit()
 	connection.close()
