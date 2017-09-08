@@ -93,22 +93,29 @@ if __name__ == "__main__":
 		response = None
 
 		# If an HTTPError 500 happens, repeat until it works (this rarely happens and this solution has worked so far)
-		tries = 0
 		gotData = False
 		while not goOn:
-			if tries < 20:
-				try:
-					response = urllib2.urlopen(testURL)
-					goOn = True
-					gotData = True
-				except urllib2.HTTPError as e:
-					if e.code == 404:
-						fails.append(str(storeNumber))
-						goOn = True
-					else:
-						tries += 1
-						pass
+			try:
+				response = urllib2.urlopen(testURL)
+				goOn = True
+				gotData = True
+			except urllib2.HTTPError as webError:
 
+				# Wawa no longer open
+				if webError.code == 404:
+					fails.append(str(storeNumber))
+					goOn = True
+
+				# Internal server error, retry
+				elif webError.code == 500:
+					pass
+
+				# Other error, fail out the program
+				else:
+					print "\nError:\n{0}".format(str(webError))
+					sys.exit(1)
+
+		# Only do work if there was no error 404
 		if gotData:
 
 			# render the json and grab only the location data we need
