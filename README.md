@@ -2,16 +2,19 @@
 Scraping Wawa data from the company's store locator page.
 
 <b>***If you don't feel like reading and just want the data, just click
-[this link](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1) to download
-the shapefile and csv</b>
+[this link](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1) to download.
+the shapefile and csv. These may not be up to date!</b>
+
+<b>***updateWawas.py is now deprecated. wawaScraper.py now handles all updating.</b>
 
 ## What do you get with this repository
 - [wawaScraper.py](https://github.com/cfh294/WawaGeoScraper/blob/master/wawaScraper.py): A script that does an initial download of the data. Instead of running this, you can just [download the result](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1).
 - [updateWawas.py](https://github.com/cfh294/WawaGeoScraper/blob/master/updateWawas.py): A script that updates the existing table in your database to have new values like most recent gas prices.
 
-### Suggested Use:
-Download the shapefile, use QGIS or OGR to put it in PostgreSQL, then use the update script as needed.
-Only use wawaScraper.py if you need a Wawa location that opened after you downloaded the original data.
+### Suggested Usage
+Download the shapefile and see if this data is useful. If so, run wawaScraper.py to get an updated
+dataset for your PostgreSQL database. This script also will update the data when used after the initial time.
+This would be useful for gathering new gas prices, new manager names, etc.
 
 ## Background
 As any born-and-raised Delaware Valley citizen knows, Wawa (particularly
@@ -122,9 +125,15 @@ made the data available [as a shapefile](https://github.com/cfh294/WawaGeoScrape
 ### Aside
 The code takes FOREVER to run! This is for two main reasons:
 
-1. The geographic grid area that I create is simply huge. I toyed with
+1. The geographic grid area that I create is simply huge. ~~I toyed with
    the idea of using PostgreSQL geometries of individual states to
-   "crop" the grid, but I wanted this to be as "out of the box" as possible.
+   "crop" the grid, but I wanted this to be as "out of the box" as possible.~~
+   I did some extra work to create a clipped grid to help fix this issue somewhat.
+   The script py2pg2json.py uses state shapes (a table in my personal database) to
+   clip the grid created by create_grid. You as the user won't be able to use this
+   clipping script unless you have the same table I have. You don't need to do this,
+   however, as the output json file contained in this repo will never change and is
+   the result of this script.
 2. My grid overcompensates due to the curvature of the Earth. Think about it:
    you are standing in a field and you point straight in front of you. The hypothetical
    straight line that would continue on from your finger would go past the horizon
@@ -145,8 +154,4 @@ The code takes FOREVER to run! This is for two main reasons:
 #### Command line example
 ```Shell
 USER:  python   wawaScraper.py   connectionString    schema.wawaTable
-```
-and
-```Shell
-USER: python    updateWawas.py   connectionString    schema.wawaTable
 ```

@@ -158,11 +158,16 @@ if __name__ == "__main__":
 				connection.rollback()  # rollback bad transaction
 
 				# update the data
-				sql = "UPDATE {0} SET".format(tableName)
+				sql = "UPDATE {0} SET\n".format(tableName)
 				for index, fieldName in enumerate(HEADER):
 					sql += "{0}={1},\n".format(fieldName, newRow[index])
 				sql = sql[:-2] + "\nWHERE {0}={1};".format(HEADER[LOCATION_ID_INDEX], newRow[LOCATION_ID_INDEX])
-				cursor.execute(sql)
+
+				try:
+					cursor.execute(sql)
+				except psycopg2.ProgrammingError:
+					print "\nSQL Error:\n{0}".format(sql)
+					sys.exit(1)
 
 		# increment the progress bar object
 		bar.next()
