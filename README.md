@@ -9,7 +9,7 @@ the shapefile and csv. These may not be up to date!</b>
 
 ## What do you get with this repository
 - [wawaScraper.py](https://github.com/cfh294/WawaGeoScraper/blob/master/wawaScraper.py): A script that does an initial download of the data. Instead of running this, you can just [download the result](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1).
-- [updateWawas.py](https://github.com/cfh294/WawaGeoScraper/blob/master/updateWawas.py): A script that updates the existing table in your database to have new values like most recent gas prices.
+- ~~[updateWawas.py](https://github.com/cfh294/WawaGeoScraper/blob/master/updateWawas.py): A script that updates the existing table in your database to have new values like most recent gas prices.~~
 
 ### Suggested Usage
 Download the shapefile and see if this data is useful. If so, run wawaScraper.py to get an updated
