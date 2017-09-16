@@ -44,6 +44,7 @@ HEADER = ["locationID", "objectID", "hasMenu", "areaManager", "open24Hours", "ad
           "longitude", "latitude", "regionalDirector", "telephone", "isActive", "storeName", "lastUpdated",
           "storeNumber", "storeOpen", "storeClose", "hasFuel", "unleadedPrice", "plusPrice", "premiumPrice"]
 LONGITUDE_HEADER_INDEX, LATITUDE_HEADER_INDEX = 9, 10
+LOCATION_ID_INDEX = 0
 
 # The PostgreSQL data types associated with the previously mentioned database table fields
 FIELD_TYPES = {"locationID": "INT PRIMARY KEY", "objectID": "TEXT", "hasMenu": "BOOLEAN", "areaManager": "TEXT",
@@ -109,6 +110,25 @@ def create_grid(bounding_box):
 		currentY += LAT_INCREMENTS
 		currentX = minX
 
+	return points
+
+
+def get_clipped_grid():
+	"""
+	Grabs the point from grid.json and returns them as a list of tuples
+	:return: a list of coordinate pairs (each is a tuple of floats)
+	"""
+	import os
+	import json
+	projectRoot = os.path.dirname(os.path.abspath(__file__))
+	jsonFile = os.path.join(projectRoot, "grid.json")
+	points = []
+	with open(jsonFile) as f:
+		features = json.load(f)["features"]
+		for feature in features:
+			coords = feature["geometry"]["coordinates"]
+			point = (float(coords[0]), float(coords[1]))
+			points.append(point)
 	return points
 
 

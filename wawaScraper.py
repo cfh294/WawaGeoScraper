@@ -25,18 +25,22 @@ import urllib2
 import json
 import psycopg2
 import sys
+import os
 from progress.bar import Bar
 
 # Import all our needed constants and functions
-from scraperUtils import validate_postgres_table, parse_fuel_info, parse_address_info, quotify, create_grid
-from scraperUtils import HEADER, FIELD_TYPES, MID_ATL_BOX, FL_BOX, LOC_REQUEST_URL, LOCATIONS_JSON_KEY, AMENITIES_TAG
+from scraperUtils import validate_postgres_table, parse_fuel_info, parse_address_info, quotify
+from scraperUtils import HEADER, FIELD_TYPES, LOC_REQUEST_URL, LOCATIONS_JSON_KEY, AMENITIES_TAG
 from scraperUtils import FUEL_PRICES_TAG, ORDERED_JSON_TAGS, FUEL_BOOLEAN_TAG, BOOLEAN_TAGS
-from scraperUtils import LONGITUDE_HEADER_INDEX, LATITUDE_HEADER_INDEX
+from scraperUtils import LONGITUDE_HEADER_INDEX, LATITUDE_HEADER_INDEX, get_clipped_grid, LOCATION_ID_INDEX
 
 # Needed number of user arguments
 NEEDED_NUM_ARGS = 3
 
 if __name__ == "__main__":
+
+	# the path to the directory that holds this project
+	projectRoot = os.path.dirname(os.path.abspath(__file__))
 
 	# validate and retrieve input
 	if len(sys.argv) != NEEDED_NUM_ARGS:
@@ -71,8 +75,8 @@ if __name__ == "__main__":
 	insertFormat = "INSERT INTO {0}({1}) VALUES (".format(tableName, ", ".join(HEADER + ["geom"]))
 
 	# create the grid using bounding boxes for Florida and the Mid Atlantic region
-	grid = create_grid(MID_ATL_BOX)
-	grid.extend(create_grid(FL_BOX))
+	# see: get_clipped_grid() in scraperUtils.py
+	grid = get_clipped_grid()
 
 	# create a progress bar for the cmd line
 	bar = Bar("Coordinate Pairs", max=len(grid))
@@ -152,6 +156,13 @@ if __name__ == "__main__":
 				cursor.execute(thisSQL)
 			except psycopg2.IntegrityError:
 				connection.rollback()  # rollback bad transaction
+
+				# update the data
+				sql = "UPDATE {0} SET".format(tableName)
+				for index, fieldName in enumerate(HEADER):
+					sql += "{0}={1},\n".format(fieldName, newRow[index])
+				sql = sql[:-2] + "\nWHERE {0}={1};".format(HEADER[LOCATION_ID_INDEX], newRow[LOCATION_ID_INDEX])
+				cursor.execute(sql)
 
 		# increment the progress bar object
 		bar.next()
