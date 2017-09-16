@@ -1,5 +1,6 @@
 #!/usr/bin/python
 """
+WARNING ------------ DEPRECATED ------------------
 updateWawas.py
 
 Script that updates Wawa info using HTTP Requests. User inputs a connection string and the name

@@ -133,7 +133,11 @@ The code takes FOREVER to run! This is for two main reasons:
    clip the grid created by create_grid. You as the user won't be able to use this
    clipping script unless you have the same table I have. You don't need to do this,
    however, as the output json file contained in this repo will never change and is
-   the result of this script.
+   the result of this script. If you really want to play around with this part of
+   the repo, the gis data can be downloaded [here](http://www2.census.gov/geo/tiger/GENZ2016/shp/cb_2016_us_state_500k.zip).
+   You would just have to import it into PostgreSQL and call it "us_state_shapes_4326" in the
+   public schema of your database.
+   
 2. My grid overcompensates due to the curvature of the Earth. Think about it:
    you are standing in a field and you point straight in front of you. The hypothetical
    straight line that would continue on from your finger would go past the horizon
