@@ -80,6 +80,7 @@ if __name__ == "__main__":
 
 	# create a progress bar for the cmd line
 	bar = Bar("Coordinate Pairs", max=len(grid))
+	storeNumbers = []
 
 	# go through each point in the grid
 	for coordinatePair in grid:
@@ -168,6 +169,7 @@ if __name__ == "__main__":
 				except psycopg2.ProgrammingError:
 					print "\nSQL Error:\n{0}".format(sql)
 					sys.exit(1)
+			storeNumbers.append(HEADER[LOCATION_ID_INDEX])
 
 		# increment the progress bar object
 		bar.next()
@@ -176,6 +178,10 @@ if __name__ == "__main__":
 
 	# Wawa doesn't use this field, so we will. All of these are "active" store (as in, open). Set them all to true.
 	cursor.execute("UPDATE {0} SET isactive='t';".format(tableName))
+
+	# set inactive wawas to false
+	doneNums = ",".join(["'" + num + "'" for num in storeNumbers])
+	cursor.execute("UPDATE {0} SET isactive='f' WHERE locationid NOT IN ({1}}".format(tableName, doneNums))
 
 	# commit changes and release possible memory locks
 	connection.commit()
