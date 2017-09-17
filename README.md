@@ -3,7 +3,7 @@ Scraping Wawa data from the company's store locator page.
 
 <b>***If you don't feel like reading and just want the data, just click
 [this link](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1) to download.
-the shapefile and csv. These may not be up to date! (last update: 09/16/2017)</b>
+the shapefile and csv. These may not be up to date! (last update: 09/17/2017)</b>
 
 <b>***updateWawas.py is now deprecated. wawaScraper.py now handles all updating.</b>
 

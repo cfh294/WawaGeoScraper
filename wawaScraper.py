@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
 	# create a progress bar for the cmd line
 	bar = Bar("Coordinate Pairs", max=len(grid))
-	storeNumbers = []
+	storeNumbers = set()
 
 	# go through each point in the grid
 	for coordinatePair in grid:
@@ -96,6 +96,8 @@ if __name__ == "__main__":
 				response = urllib2.urlopen(testURL)
 				goOn = True
 			except urllib2.HTTPError:
+				pass
+			except urllib2.URLError:
 				pass
 
 		# render the json and grab only the location data we need
@@ -169,7 +171,7 @@ if __name__ == "__main__":
 				except psycopg2.ProgrammingError:
 					print "\nSQL Error:\n{0}".format(sql)
 					sys.exit(1)
-			storeNumbers.append(newRow[LOCATION_ID_INDEX])
+			storeNumbers.add(newRow[LOCATION_ID_INDEX])
 
 		# increment the progress bar object
 		bar.next()
@@ -180,7 +182,7 @@ if __name__ == "__main__":
 	cursor.execute("UPDATE {0} SET isactive='t';".format(tableName))
 
 	# set inactive wawas to false
-	doneNums = ",".join(["'" + num + "'" for num in storeNumbers])
+	doneNums = ",".join(storeNumbers)
 	cursor.execute("UPDATE {0} SET isactive='f' WHERE locationid NOT IN ({1});".format(tableName, doneNums))
 
 	# commit changes and release possible memory locks
