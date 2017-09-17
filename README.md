@@ -137,7 +137,9 @@ The code takes FOREVER to run! This is for two main reasons:
    the repo, the gis data can be downloaded [here](http://www2.census.gov/geo/tiger/GENZ2016/shp/cb_2016_us_state_500k.zip).
    You would just have to import it into PostgreSQL and call it "us_state_shapes_4326" in the
    public schema of your database.
-   
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/clipped-grid.png)
+
 2. My grid overcompensates due to the curvature of the Earth. Think about it:
    you are standing in a field and you point straight in front of you. The hypothetical
    straight line that would continue on from your finger would go past the horizon
