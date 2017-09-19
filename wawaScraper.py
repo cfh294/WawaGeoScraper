@@ -62,9 +62,8 @@ if __name__ == "__main__":
 		sys.exit(1)
 	cursor = connection.cursor()
 
-	# drop existing table (if there is one) and create a new empty one
-	cursor.execute("DROP TABLE IF EXISTS {0};".format(tableName))
-	sql = "CREATE TABLE {0} (\n".format(tableName)
+	# create the table, if needed
+	sql = "CREATE TABLE IF NOT EXISTS {0} (\n".format(tableName)
 	for field in HEADER + ["geom"]:  # add a geometry field to the header list
 		fieldType = FIELD_TYPES[field]
 		sql += "{0} {1},\n".format(field, fieldType)
