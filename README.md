@@ -8,7 +8,7 @@ the shapefile and csv. These may not be up to date! (last update: 09/17/2017)</b
 <b>***updateWawas.py is now deprecated. wawaScraper.py now handles all updating.</b>
 
 ## What do you get with this repository
-- [wawaScraper.py](https://github.com/cfh294/WawaGeoScraper/blob/master/wawaScraper.py): A script that does an initial download of the data. Instead of running this, you can just [download the result](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1).
+- [wawaScraper.py](https://github.com/cfh294/WawaGeoScraper/blob/master/wawaScraper.py): A script that does an initial download of the data, and then updates it every time it's run after that.
 - ~~[updateWawas.py](https://github.com/cfh294/WawaGeoScraper/blob/master/Deprecated/updateWawas.py): A script that updates the existing table in your database to have new values like most recent gas prices.~~
 - [grid.json](https://github.com/cfh294/WawaGeoScraper/blob/master/grid.json): A json file containing the points used as the "grid" for wawaScraper.py
 - [py2pg2json.py](https://github.com/cfh294/WawaGeoScraper/blob/master/py2pg2json.py): The script that created the grid.json file. This is only had to be run once, so you don't actually need this. But, it may be interesting to you as a developer.
