@@ -1,23 +1,6 @@
 # WawaGeoScraper
 Scraping Wawa data from the company's store locator page.
 
-<b>***If you don't feel like reading and just want the data, just click
-[this link](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1) to download.
-the shapefile and csv. These may not be up to date! (last update: 09/17/2017)</b>
-
-<b>***updateWawas.py is now deprecated. wawaScraper.py now handles all updating.</b>
-
-## What do you get with this repository
-- [wawaScraper.py](https://github.com/cfh294/WawaGeoScraper/blob/master/wawaScraper.py): A script that does an initial download of the data, and then updates it every time it's run after that.
-- ~~[updateWawas.py](https://github.com/cfh294/WawaGeoScraper/blob/master/Deprecated/updateWawas.py): A script that updates the existing table in your database to have new values like most recent gas prices.~~
-- [grid.json](https://github.com/cfh294/WawaGeoScraper/blob/master/grid.json): A json file containing the points used as the "grid" for wawaScraper.py
-- [py2pg2json.py](https://github.com/cfh294/WawaGeoScraper/blob/master/py2pg2json.py): The script that created the grid.json file. This is only had to be run once, so you don't actually need this. But, it may be interesting to you as a developer.
-- A shapefile and a csv
-
-### Suggested Usage
-Download the shapefile and see if this data is useful. If so, run wawaScraper.py to get an updated
-dataset for your PostgreSQL database. This script also will update the data when used after the initial time.
-This would be useful for gathering new gas prices, new manager names, etc.
 
 ## Background
 As any born-and-raised Delaware Valley citizen knows, Wawa (particularly
@@ -25,7 +8,7 @@ its coffee) is the life and blood of the region. To misquote [a certain 4chan
 meme](http://knowyourmeme.com/memes/shrek-is-love-shrek-is-life): Wawa is love, Wawa is life.
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/wawa-front.jpg)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](images/wawa-front.jpg)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>The Pearly Gates for South Jerseyans</i>
 
@@ -49,7 +32,7 @@ Unfortunately, Wawa's site was not so forgiving. Unlike
 QuickChek's site, Wawa's didn't list their locations, but rather made you
 search.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/store-locator.png)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](images/store-locator.png)
 
 &nbsp;
 
@@ -66,15 +49,15 @@ entered zip code.
 
 &nbsp;
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/xhr.png)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](images/xhr.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>The XHR view in the "Inspect" window</i>
 &nbsp;
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/json.png)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](images/json.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>The returned JSON data</i>
 
 ### Getting Somewhere
-This XMLHttpRequest's url was the breakthrough I needed! If I could make a grid
+This XMLHttpRequest's url was the breakthrough I needed! ~~If I could make a grid
 of points over the Mid-Atlantic region (and Florida--Wawa has stores there now!) with
 points that were 5 miles apart in each direction, I could iterate through each point
 and fire off a new url to grab all possible Wawas! I used a simply-built python
@@ -83,86 +66,31 @@ it got exactly what I needed. The rest of my code broke down the JSON data
 and formatted it as field values in a database table. Each record was now represented
 by a Python list object (or array). I shoved these new rows into a database table
 using Python and SQL, and then used PostGIS functions to calculate the actual
-geometry of each Wawa store's location.
+geometry of each Wawa store's location.~~
 
-Code sample showing how the grids are created: 
-```python
-def create_grid(bounding_box):
-	"""
-	Creates a grid of equally spaced coordinate pairs in a provided bounding box
-	:param bounding_box: A pair of points that represent the upper left and lower right coordinates of a bounding box
-	:return: A list of points: [(x1, y1), (x2, y2),..., (xn, yn)]
-	"""
+<b>2019 UPDATE</b>
 
-	lowerLeft, upperRight = bounding_box[0], bounding_box[1]
-	maxX, maxY, minX, minY = upperRight[0], upperRight[1], lowerLeft[0], lowerLeft[1]
-	points = []
-	currentX, currentY = minX, minY
-
-	while currentY < maxY:
-		while currentX < maxX:
-			points.append((currentX, currentY))
-			currentX += LAT_INCREMENTS
-		currentY += LAT_INCREMENTS
-		currentX = minX
-
-	return points
-```
+After additional testing, I was able to find another endpoint that allows me to 
+search by store id. While I don't have a a list of store ids, I have a much better
+rough estimate of a range of integers for store ids that I can use to get all of the 
+Wawas, rather than cast wide geographic nets to grab them. This new method is in the 
+updated code and is <i>much</i> more straight forward. 
 
 
 ### Results
 The result of all of this was a surprisingly detailed table containing specific
 information such as manager names, store hours, and even individual gasoline type
-prices as of the last update. [I have exported this to csv](https://github.com/cfh294/WawaGeoScraper/blob/master/Tabular%20Data/wawaLocations_2017.csv) and have 
-made the data available [as a shapefile](https://github.com/cfh294/WawaGeoScraper/tree/master/Shapefile) as well.
+prices as of the last update. [I have exported this to csv](output/locations_2019.csv) and have 
+made the data available [as a shapefile](output/wawas_shapefile_2019.zip) as well.
 
-&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/database-table.png)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Resulting table in PostgreSQL</i>
-
-&nbsp;
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/nj-wawas.png)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Sample of data, mapped in QGIS</i>
-
-### Aside
-The code takes FOREVER to run! This is for two main reasons:
-
-1. The geographic grid area that I create is simply huge. ~~I toyed with
-   the idea of using PostgreSQL geometries of individual states to
-   "crop" the grid, but I wanted this to be as "out of the box" as possible.~~
-   I did some extra work to create a clipped grid to help fix this issue somewhat.
-   The script py2pg2json.py uses state shapes (a table in my personal database) to
-   clip the grid created by create_grid. You as the user won't be able to use this
-   clipping script unless you have the same table I have. You don't need to do this,
-   however, as the output json file contained in this repo will never change and is
-   the result of this script. If you really want to play around with this part of
-   the repo, the gis data can be downloaded [here](http://www2.census.gov/geo/tiger/GENZ2016/shp/cb_2016_us_state_500k.zip).
-   You would just have to import it into PostgreSQL and call it "us_state_shapes_4326" in the
-   public schema of your database.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/clipped-grid.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The grid json, zoomed way out
-
-2. My grid overcompensates due to the curvature of the Earth. Think about it:
-   you are standing in a field and you point straight in front of you. The hypothetical
-   straight line that would continue on from your finger would go past the horizon
-   into the sky, while the actual land would go over the horizon and around.
-   For this reason, treating coordinates in a [geographic coordinate system](https://en.wikipedia.org/wiki/Geographic_coordinate_system) as
-   points on a flat piece of paper can be problematic. In reality, your rectangular flat grid on
-   real-life earth would look like a bloated, round trapezoid since the lines of longitude get closer
-   together as they approach the poles.
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](Images/distortion.png)
-
-#### Requirements (if you're bored and don't want to just [download it here](https://www.dropbox.com/s/6qaibtwee8syinm/WawaData.zip?dl=1)).
-- Knowledge of how to use the command line to run a python script
-- The PostGIS extension for PostgreSQL
-- The python library [psycopg2](https://pypi.python.org/pypi/psycopg2) ("pip install psycopg2")
-- An internet connection
 
 #### Command line example
 ```Shell
-USER:  python   wawaScraper.py   connectionString    schema.wawaTable
+
+pip3 install -r requirements.txt
+
+python3 wawa_to_csv.py /location/of/output.csv
+
+# with limit
+python3 wawa_to_csv.py /location/of/output.csv --limit 50
 ```
